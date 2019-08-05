@@ -37,6 +37,9 @@
 </template>
 
 <script>
+import { playerRef, databaseURL } from "../../rtdb-firebase/db.js";
+import axios from "axios";
+
 export default {
   name: "HomeComponent",
   data() {
@@ -45,6 +48,43 @@ export default {
       alert: false,
       warning: false
     };
+  },
+  created() {
+    if (this.$store.state.username) {
+      this.$router.push("/play");
+    }
+  },
+  firebase: {
+    playerDetails: playerRef
+  },
+  methods: {
+    startGamePlay() {
+      if (this.username) {
+        this.alert = true;
+        this.$store.dispatch("setUsername", this.username);
+        if (this.playerDetails.length === 1) {
+          this.$router.push("/play");
+        } else {
+          axios({
+            method: "delete",
+            url: databaseURL
+          }).then(response => {
+            const randomNumber = Math.floor(Math.random() * 900) + 100;
+            playerRef
+              .push({
+                username: this.username,
+                number: randomNumber,
+                exp: null
+              })
+              .then(response => {
+                this.$router.push("/play");
+              });
+          });
+        }
+      } else {
+        this.warning = true;
+      }
+    }
   }
 };
 </script>
