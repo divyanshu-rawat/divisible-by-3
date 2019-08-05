@@ -1,17 +1,12 @@
 <template>
-  <div id="app">
-    <HomeComponent />
+  <div id="app" class="flex justify-content align-items">
+    <router-view/>
   </div>
 </template>
 
 <script>
-import HomeComponent from './components/Home/homeComponent'
-
 export default {
-  name: "app",
-  components: {
-    HomeComponent
-  },
+  name: "app"
 };
 </script>
 
