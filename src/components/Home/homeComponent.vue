@@ -68,7 +68,7 @@ export default {
           axios({
             method: "delete",
             url: databaseURL
-          }).then(response => {
+          }).then(() => {
             const randomNumber = Math.floor(Math.random() * 900) + 100;
             playerRef
               .push({
@@ -76,7 +76,7 @@ export default {
                 number: randomNumber,
                 expression: null
               })
-              .then(response => {
+              .then(() => {
                 this.$router.push("/play");
               });
           });
