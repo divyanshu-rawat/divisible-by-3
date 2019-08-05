@@ -74,7 +74,7 @@ export default {
               .push({
                 username: this.username,
                 number: randomNumber,
-                exp: null
+                expression: null
               })
               .then(response => {
                 this.$router.push("/play");
