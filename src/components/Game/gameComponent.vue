@@ -6,25 +6,7 @@
       </div>
 
       <div v-for="player in playerDetails" :key="player['.key']" class="player-info-wrapper">
-        <div class="row">
-          <div class="col-sm-3 text-center" v-if="player['username'] === username">
-            <img src="../../assets/avatar.png" alt="player['username']" style="width: 3rem">
-          </div>
-          <div class="col-sm-3 text-center" v-if="player['username'] !== username"></div>
-          <div class="col-sm-6">
-            <div class="card">
-              <div class="card-body">
-                <div class="mb-0">
-                  <p v-if="player['expression']" style="font-size: 16px;">{{player['expression']}}</p>
-                  <strong>{{player['number']}}</strong>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-sm-3 text-center" v-if="player['username'] !== username">
-            <img src="../../assets/avatar_.png" alt="player['username']" style="width: 3.5rem">
-          </div>
-        </div>
+        <player-stats-component :player="player" :username="username"></player-stats-component>
       </div>
 
       <div class="row justify-content" v-if="!winner && !loser">
@@ -53,7 +35,7 @@
 
 <script>
 import { playerRef } from "../../rtdb-firebase/db.js";
-
+import PlayerStatsComponent from "../PlayerStats/playerStatsComponent"
 export default {
   name: "GameComponent",
   data() {
@@ -64,6 +46,9 @@ export default {
       loser: false,
       warning: false
     };
+  },
+    components:{
+    "player-stats-component": PlayerStatsComponent,
   },
   created() {
     this.username = this.$store.state.username;
