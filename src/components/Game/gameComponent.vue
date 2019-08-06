@@ -42,7 +42,7 @@
       aria-labelledby="winnerModalLabel"
       aria-hidden="true"
     >
-      <modal-content-component></modal-content-component>
+      <modal-content-component :Quit="Quit" :newGame="newGame"></modal-content-component>
     </div>
 
     <!-- Winner Modal End -->
@@ -57,7 +57,7 @@
       aria-labelledby="loserModalLabel"
       aria-hidden="true"
     >
-      <modal-content-component></modal-content-component>
+      <modal-content-component :Quit="Quit" :newGame="newGame"></modal-content-component>
     </div>
 
     <!-- Loser Modal End -->
@@ -65,10 +65,11 @@
 </template>
 
 <script>
-import { playerRef } from "../../rtdb-firebase/db.js";
+import { playerRef, databaseURL } from "../../rtdb-firebase/db.js";
 import PlayerStatsComponent from "../PlayerStats/playerStatsComponent";
-import ModalContentComponent from "../modalContentComponent/modalContentComponent";
+import ModalContentComponent from "../modalContent/modalContentComponent";
 import EventBus from "../../vue-event-bus/event-bus.js";
+import axios from "axios";
 
 export default {
   name: "GameComponent",
@@ -154,14 +155,51 @@ export default {
     },
     showModal(status) {
       if (status === "winner") {
+        // eslint-disable-next-line
         $("#winnerModal").modal({
           backdrop: "static",
           keyboard: false
         });
       } else {
+        // eslint-disable-next-line
         $("#loserModal").modal({
           backdrop: "static",
           keyboard: false
+        });
+      }
+    },
+
+    Quit() {
+      location.reload(true);
+    },
+    newGame() {
+      if (this.playerDetails.length === 1) {
+        this.winner = false;
+        this.loser = false;
+        const length = this.playerDetails.length;
+        const newNumber = Math.floor(
+          Number(this.playerDetails[length - 1]["number"]) / 3
+        );
+        const divisor = Number(this.playerDetails[length - 1]["number"]);
+
+        playerRef.push({
+          username: this.username,
+          number: newNumber,
+          expression: "[" + String(divisor) + "/" + 3 + "] = " + newNumber
+        });
+      } else if (this.playerDetails.length > 1) {
+        axios({
+          method: "delete",
+          url: databaseURL
+        }).then(() => {
+          const number = Math.floor(Math.random() * 900) + 100;
+          playerRef.push({
+            username: this.username,
+            number: number,
+            exp: null
+          });
+          this.winner = false;
+          this.loser = false;
         });
       }
     }

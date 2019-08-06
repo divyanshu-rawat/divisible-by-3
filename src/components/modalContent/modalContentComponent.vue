@@ -17,8 +17,13 @@
         <h3 v-if="!winner">You Lost!</h3>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          @click="newGame()"
+          data-dismiss="modal"
+        >Play Again?</button>
+        <button type="button" data-dismiss="modal" class="btn btn-secondary" @click="Quit()">Quit</button>
       </div>
     </div>
   </div>
@@ -31,9 +36,10 @@ export default {
   name: "ModalContentComponent",
   data() {
     return {
-      winner: false,
+      winner: false
     };
   },
+  props: ["Quit", "newGame"],
   created() {
     EventBus.$on("win-lose-status", evt => {
       this.winner = evt;
