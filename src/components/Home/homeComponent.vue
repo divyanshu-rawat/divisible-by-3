@@ -46,7 +46,8 @@ export default {
     return {
       username: "",
       alert: false,
-      warning: false
+      warning: false,
+      playerDetails: []
     };
   },
   created() {

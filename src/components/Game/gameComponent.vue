@@ -71,8 +71,31 @@ export default {
       this.$router.push("/");
     }
   },
+  updated: function() {
+    window.scrollTo(
+      0,
+      document.body.scrollHeight || document.documentElement.scrollHeight
+    );
+  },
   firebase: {
     playerDetails: playerRef
+  },
+  /* Vue does provide a generic way to observe and react to data changes on a Vue instance. */
+  watch: {
+    playerDetails: function(response) {
+      const length = response.length;
+      if (length > 0) {
+        if (response[length - 1]["number"] == 1) {
+          if (response[length - 1]["username"] === this.username) {
+            this.winner = true;
+            alert("winner"); // test-alert
+          } else {
+            this.loser = true;
+            alert("loseer"); // test-alert
+          }
+        }
+      }
+    }
   },
 
   methods: {
