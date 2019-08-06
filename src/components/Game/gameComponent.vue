@@ -30,12 +30,46 @@
         >Please wait for your opponent to respond!</div>
       </transition>
     </div>
+
+    <!-- Winner Modal Start-->
+
+    <!-- Modal -->
+    <div
+      class="modal fade"
+      id="winnerModal"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="winnerModalLabel"
+      aria-hidden="true"
+    >
+      <modal-content-component></modal-content-component>
+    </div>
+
+    <!-- Winner Modal End -->
+
+    <!-- Loser Modal Start -->
+
+    <div
+      class="modal fade"
+      id="loserModal"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="loserModalLabel"
+      aria-hidden="true"
+    >
+      <modal-content-component></modal-content-component>
+    </div>
+
+    <!-- Loser Modal End -->
   </div>
 </template>
 
 <script>
 import { playerRef } from "../../rtdb-firebase/db.js";
-import PlayerStatsComponent from "../PlayerStats/playerStatsComponent"
+import PlayerStatsComponent from "../PlayerStats/playerStatsComponent";
+import ModalContentComponent from "../modalContentComponent/modalContentComponent";
+import EventBus from "../../vue-event-bus/event-bus.js";
+
 export default {
   name: "GameComponent",
   data() {
@@ -47,8 +81,9 @@ export default {
       warning: false
     };
   },
-    components:{
+  components: {
     "player-stats-component": PlayerStatsComponent,
+    "modal-content-component": ModalContentComponent
   },
   created() {
     this.username = this.$store.state.username;
@@ -73,11 +108,12 @@ export default {
         if (response[length - 1]["number"] == 1) {
           if (response[length - 1]["username"] === this.username) {
             this.winner = true;
-            alert("winner"); // test-alert
+            this.showModal("winner");
           } else {
             this.loser = true;
-            alert("loseer"); // test-alert
+            this.showModal("loser");
           }
+          EventBus.$emit("win-lose-status", this.winner);
         }
       }
     }
@@ -114,6 +150,19 @@ export default {
             }, 2000);
           }
         }
+      }
+    },
+    showModal(status) {
+      if (status === "winner") {
+        $("#winnerModal").modal({
+          backdrop: "static",
+          keyboard: false
+        });
+      } else {
+        $("#loserModal").modal({
+          backdrop: "static",
+          keyboard: false
+        });
       }
     }
   }
